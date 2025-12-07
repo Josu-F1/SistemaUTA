@@ -99,7 +99,116 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sección de Desarrolladores -->
+            <div class="card shadow-lg border-0 mb-4 mt-5">
+                <div class="card-header text-center py-3" style="background: linear-gradient(135deg, #901B20 0%, #6d1419 100%); color: white !important;">
+                    <h4 class="mb-0 text-white">
+                        <i class="fas fa-code me-2"></i>Desarrollado por
+                    </h4>
+                    <p class="mb-0 small text-white">Equipo de Desarrollo - Sistema de Gestión UTA</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <!-- Desarrollador 1 -->
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm border-0 hover-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="mb-3">
+                                        <div class="rounded-circle bg-primary bg-gradient d-inline-flex align-items-center justify-content-center" 
+                                             style="width: 80px; height: 80px;">
+                                            <i class="fas fa-user-tie fa-2x text-white"></i>
+                                        </div>
+                                    </div>
+                                    <h5 class="card-title fw-bold mb-2" style="color: #901B20;">Josue Neptali Llumitasig Pasochoa</h5>
+                                    <p class="text-muted small mb-3">
+                                        <i class="fas fa-laptop-code me-1"></i>Full Stack Developer
+                                    </p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <span class="badge bg-primary">PHP</span>
+                                        <span class="badge bg-info">MySQL</span>
+                                        <span class="badge bg-success">JavaScript</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Desarrollador 2 -->
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm border-0 hover-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="mb-3">
+                                        <div class="rounded-circle bg-success bg-gradient d-inline-flex align-items-center justify-content-center" 
+                                             style="width: 80px; height: 80px;">
+                                            <i class="fas fa-user-tie fa-2x text-white"></i>
+                                        </div>
+                                    </div>
+                                    <h5 class="card-title fw-bold mb-2" style="color: #901B20;">Bryan Josue Lopez Vera</h5>
+                                    <p class="text-muted small mb-3">
+                                        <i class="fas fa-database me-1"></i>Backend Developer
+                                    </p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <span class="badge bg-danger">Laravel</span>
+                                        <span class="badge bg-info">MySQL</span>
+                                        <span class="badge bg-warning text-dark">API REST</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Desarrollador 3 -->
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm border-0 hover-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="mb-3">
+                                        <div class="rounded-circle bg-warning bg-gradient d-inline-flex align-items-center justify-content-center" 
+                                             style="width: 80px; height: 80px;">
+                                            <i class="fas fa-user-tie fa-2x text-white"></i>
+                                        </div>
+                                    </div>
+                                    <h5 class="card-title fw-bold mb-2" style="color: #901B20;">Jonathan Josue Fiallos Yanza</h5>
+                                    <p class="text-muted small mb-3">
+                                        <i class="fas fa-paint-brush me-1"></i>Frontend Developer
+                                    </p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <span class="badge bg-primary">Bootstrap</span>
+                                        <span class="badge bg-warning text-dark">JavaScript</span>
+                                        <span class="badge bg-info">CSS3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información adicional del equipo -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-light border text-center" role="alert">
+                                <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                                <strong>Universidad Técnica de Ambato</strong> - Facultad de Ingeniería en Sistemas<br>
+                                <small class="text-muted">Proyecto de Desarrollo Web • Diciembre 2025</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
         </div>
     </div>
 </div>
+
+<style>
+.hover-card {
+    transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+}
+</style>
+```

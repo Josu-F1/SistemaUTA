@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "utacuarto1"; // <--- Asegúrate que este sea el nombre exacto en tu phpMyAdmin
+$servername = "sql308.infinityfree.com";
+$username = "if0_40616220";
+$password = "KH5emM7h7cst";
+$dbname = "if0_40616220_utacuarto1";
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 

@@ -277,6 +277,40 @@
         </div>
     </div>
     
+    <!-- Modal de Confirmación para Eliminar -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-danger">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-user-times fa-3x text-danger mb-3"></i>
+                    <h6 class="mb-3">¿Estás seguro de que quieres eliminar a este estudiante?</h6>
+                    <p class="text-muted mb-2">
+                        <strong>Cédula:</strong> <span id="deleteStudentCedula"></span>
+                    </p>
+                    <p class="text-muted mb-0">
+                        <strong>Nombre:</strong> <span id="deleteStudentNombre"></span>
+                    </p>
+                    <div class="alert alert-warning mt-3 mb-0" role="alert">
+                        <small><i class="fas fa-info-circle me-1"></i>Esta acción no se puede deshacer.</small>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash-alt me-1"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -297,6 +331,11 @@
 
         const formReporteJasperCedula = document.getElementById('formReporteJasperCedula');
         const reporteJasperCedulaModal = new bootstrap.Modal(document.getElementById('reporteJasperCedulaModal'));
+
+        // Modal de confirmación de eliminación
+        const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        let studentToDelete = null;
 
         // --- NUEVO: Variables para el buscador ---
         const searchInput = document.getElementById('searchInput');
@@ -408,32 +447,20 @@
         tablaEstudiantesBody.addEventListener('click', function(event) {
             // Logic for the DELETE button
             if (event.target.classList.contains('delete-btn')) {
+                const row = event.target.closest('tr');
                 const studentCedula = event.target.dataset.estcedula;
-
-                if (confirm('¿Estás seguro de que quieres eliminar a este estudiante?')) {
-                    const formData = new FormData();
-                    formData.append('estcedula', studentCedula);
-
-                    fetch('./models/eliminar.php', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        return response.text(); 
-                    })
-                    .then(responseText => {
-                        if (responseText.includes("Se eliminó el estudiante") || responseText.includes("Se elimino")) {
-                            alert('Estudiante eliminado exitosamente.');
-                            refreshStudentTable(); 
-                        } else {
-                            alert('Error al eliminar estudiante: ' + responseText);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al eliminar estudiante:', error);
-                        alert('Error de conexión de red o en el servidor al eliminar.');
-                    });
-                }
+                const cells = row.cells;
+                const nombre = cells[1].textContent + ' ' + cells[2].textContent;
+                
+                // Guardar información del estudiante a eliminar
+                studentToDelete = studentCedula;
+                
+                // Mostrar información en el modal
+                document.getElementById('deleteStudentCedula').textContent = studentCedula;
+                document.getElementById('deleteStudentNombre').textContent = nombre;
+                
+                // Mostrar el modal
+                deleteConfirmModal.show();
             }
             
             // Logic for the EDIT button
@@ -457,6 +484,61 @@
                 editFormMessage.className = 'mt-3'; 
 
                 editStudentModal.show();
+            }
+        });
+
+        // --- Confirm Delete Button Handler ---
+        confirmDeleteBtn.addEventListener('click', function() {
+            if (studentToDelete) {
+                const formData = new FormData();
+                formData.append('estcedula', studentToDelete);
+
+                // Deshabilitar el botón mientras se procesa
+                confirmDeleteBtn.disabled = true;
+                confirmDeleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Eliminando...';
+
+                fetch('./models/eliminar.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    return response.text(); 
+                })
+                .then(responseText => {
+                    if (responseText.includes("Se eliminó el estudiante") || responseText.includes("Se elimino")) {
+                        // Cerrar modal
+                        deleteConfirmModal.hide();
+                        
+                        // Mostrar mensaje de éxito con toast o alert
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+                        alertDiv.style.zIndex = '9999';
+                        alertDiv.innerHTML = `
+                            <i class="fas fa-check-circle me-2"></i>Estudiante eliminado exitosamente.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        `;
+                        document.body.appendChild(alertDiv);
+                        
+                        // Remover alerta después de 3 segundos
+                        setTimeout(() => {
+                            alertDiv.remove();
+                        }, 3000);
+                        
+                        refreshStudentTable(); 
+                    } else {
+                        alert('Error al eliminar estudiante: ' + responseText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al eliminar estudiante:', error);
+                    alert('Error de conexión de red o en el servidor al eliminar.');
+                })
+                .finally(() => {
+                    // Restaurar el botón
+                    confirmDeleteBtn.disabled = false;
+                    confirmDeleteBtn.innerHTML = '<i class="fas fa-trash-alt me-1"></i>Eliminar';
+                    studentToDelete = null;
+                });
             }
         });
 
@@ -518,7 +600,23 @@
             const cedula = document.getElementById('cedulaFpdf').value;
             if (cedula) {
                 window.open(`reporteEstXCedulaFpdf.php?cedula=${encodeURIComponent(cedula)}`, '_blank');
+                
+                // Cerrar el modal correctamente y limpiar el backdrop
                 reporteFpdfCedulaModal.hide();
+                
+                // Limpiar el formulario
+                document.getElementById('cedulaFpdf').value = '';
+                
+                // Asegurar que se remueva el backdrop y se restaure el scroll
+                setTimeout(() => {
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                    document.body.classList.remove('modal-open');
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
+                }, 300);
             } else {
                 alert('Por favor, ingrese una cédula para generar el reporte FPDF.');
             }
